@@ -3,6 +3,8 @@ const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 const graphqlHTTP = require('express-graphql');
 const { buildSchema } = require('graphql');
+const { importSchema } = require('graphql-import');
+const graphqlSchema = importSchema('./graphql_schemas/schema.graphql');
 
 const app = express();
 
@@ -11,17 +13,17 @@ const authConfig = {
   audience: 'https://api.arc.com'
 };
 
-// TEMP Construct a schema, using GraphQL schema language
-var schema = buildSchema(`
-  type Query {
-    hello: String
-  }
-`);
+// builds the schema from schema.graphql file
+
+var builtSchema = buildSchema(graphqlSchema);
 
 // The root provides a resolver function for each API endpoint
 var root = {
   hello: () => {
     return 'Hello world!';
+  },
+  info: () => {
+    return 'Test the info';
   }
 };
 
@@ -42,7 +44,7 @@ app.use(
   '/api/graphql',
   checkJwt,
   graphqlHTTP({
-    schema: schema,
+    schema: builtSchema,
     rootValue: root,
     graphiql: true
   }),
@@ -53,4 +55,4 @@ app.use(
   }
 );
 
-app.listen(4000, () => console.log('API listening on 4000'));
+app.listen(4000, () => console.log('Server listening on 4000'));

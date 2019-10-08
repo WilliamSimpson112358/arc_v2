@@ -1,0 +1,63 @@
+type Query {
+  info: String
+  feed: [Link!]!
+  airplane_information: [Airplane!]!
+  hello: String
+}
+
+type Mutation {
+  postLink(url: String!, description: String!): Link!
+  postAirplane(
+    single_engine: Boolean!
+    multi_engine: Boolean!
+    make: String!
+    model: String!
+    production_year: Int!
+    complex: Boolean!
+    retractable_landing_gear: Boolean!
+    high_wing: Boolean!
+    low_wing: Boolean!
+    total_time: Int!
+    currently_rented: Boolean!
+    time_between_overhaul: Int!
+  ): Airplane!
+  signup(email: String!, password: String!, name: String!): AuthPayload
+  login(email: String!, password: String!): AuthPayload
+}
+
+type Link {
+  id: ID!
+  description: String!
+  url: String!
+  postedBy: User
+}
+
+type Airplane {
+  id: ID!
+  single_engine: Boolean!
+  multi_engine: Boolean!
+  make: String!
+  model: String!
+  production_year: Int!
+  complex: Boolean!
+  retractable_landing_gear: Boolean!
+  high_wing: Boolean!
+  low_wing: Boolean!
+  total_time: Int!
+  time_between_overhaul: Int!
+  currently_rented: Boolean!
+  userInPossession: User
+}
+
+type AuthPayload {
+  token: String
+  user: User
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  links: [Link!]!
+  airplanes: [Airplane!]!
+}
